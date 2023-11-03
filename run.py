@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 import os
 import datetime
+import math
 
 import requests
 import pydantic
 from dotenv import load_dotenv
 import xml.etree.ElementTree as ET
-from flask import Flask
+from flask import Flask, request
 
 load_dotenv()
 
@@ -158,5 +159,33 @@ def load_departures():
     departures = get_departures(["18"])
     return Response(departures=departures).json(), 200, {"Content-Type": "application/json"}
 
+@app.get("/as-text")
+def departures_as_text():
+    departures = get_departures(["18"])
+
+    num = int(request.args.get("num", 2))
+
+    text = ""
+    if min(num, len(departures)) == 1:
+        text = "Die nächste Tram zum CERN kommt in"
+    else:
+        text = "Die nächsten Trams zum CERN kommen in"
+
+    frags = []
+
+    for  dep in departures[:num]:
+        best_time = dep.estimated or dep.timetabled
+        delta = best_time - datetime.datetime.utcnow()
+        minutes = math.floor(delta.total_seconds()/60)
+        if minutes == 1:
+            frags.append("einer Minute")
+        else:
+            frags.append(f"{minutes} Minuten")
+
+
+    times = ", ".join(frags[:-1]) + " und " + frags[-1]
+    text +=  " " + times
+
+    return text
 
 
