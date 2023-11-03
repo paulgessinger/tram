@@ -7,7 +7,7 @@ import requests
 import pydantic
 from dotenv import load_dotenv
 import xml.etree.ElementTree as ET
-from flask import Flask, request
+from flask import Flask, request,jsonify
 
 load_dotenv()
 
@@ -186,6 +186,6 @@ def departures_as_text():
     times = ", ".join(frags[:-1]) + " und " + frags[-1]
     text +=  " " + times
 
-    return text
+    return jsonify({"text": text})
 
 
