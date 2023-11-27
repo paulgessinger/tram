@@ -54,7 +54,6 @@ def get_departures(requested_lines: list[str]) -> list[Departure]:
 
     request = request.format(time=datetime.datetime.now())
     token = os.environ.get("API_KEY")
-    #  token = "57c5dbbbf1fe4d000100001842c323fa9ff44fbba0b9b925f0c052d1"
     r = requests.request(
         method="post",
         url=url,
