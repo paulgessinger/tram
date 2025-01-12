@@ -177,14 +177,17 @@ def departures_as_text():
 
     for dep in departures[:num]:
         best_time = dep.estimated or dep.timetabled
-        delta = best_time - datetime.datetime.utcnow()
+        delta = best_time - datetime.datetime.now(datetime.timezone.utc)
         minutes = math.floor(delta.total_seconds() / 60)
         if minutes == 1:
             frags.append("einer Minute")
         else:
             frags.append(f"{minutes} Minuten")
 
-    times = ", ".join(frags[:-1]) + " und " + frags[-1]
+    if len(frags) > 1:
+        times = ", ".join(frags[:-1]) + " und " + frags[-1]
+    else:
+        times = frags[0]
     text += " " + times
 
     return jsonify({"text": text})
