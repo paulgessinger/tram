@@ -64,8 +64,6 @@ def get_departures(requested_lines: list[str]) -> list[Departure]:
         headers={"Content-Type": "text/xml", "Authorization": token},
     )
 
-    #  print(r.encoding)
-    #  print(r.apparent_encoding)
     r.encoding = r.apparent_encoding
 
     namespaces = {
