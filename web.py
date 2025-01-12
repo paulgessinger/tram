@@ -177,7 +177,9 @@ def departures_as_text():
 
     for dep in departures[:num]:
         best_time = dep.estimated or dep.timetabled
-        delta = best_time - datetime.datetime.now(datetime.timezone.utc)
+        delta = best_time - datetime.datetime.now(datetime.timezone.utc).replace(
+            tzinfo=None
+        )
         minutes = math.floor(delta.total_seconds() / 60)
         if minutes == 1:
             frags.append("einer Minute")
